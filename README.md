@@ -48,7 +48,7 @@ Sigue estos pasos en orden cronológico desde tu terminal para desplegar el micr
 ## 1. Clonar el repositorio y preparar el entorno
 
 ```shell
-git clone <URL_DE_TU_REPOSITORIO>
+git clone https://github.com/CarlosF1406/bia-microservicio
 cd bia-microservicio
 cp .env.example .env
 ```
@@ -63,7 +63,7 @@ docker compose up -d
 
 ## 3. Insertar los insumos en la carpeta de data
 
-Dentro de la carpeta raíz se encuentra un directorio llamado `data/`. Debes asegurarte de que el archivo CSV de datos históricos esté guardado allí. El nombre del archivo debe coincidir exactamente con el valor declarado en la variable `CSV_FILE_PATH` de tu `.env`.
+Dentro de la carpeta raíz es necesario crear un directorio llamado `data/`. Debes asegurarte de que el archivo CSV de datos históricos esté guardado allí. El nombre del archivo debe coincidir exactamente con el valor declarado en la variable `CSV_FILE_PATH` de tu `.env`.
 
 ## 4. Inicializar, importar datos y encender la API (Todo en uno)
 
