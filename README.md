@@ -77,7 +77,7 @@ Este comando es igual en todos los sistemas. Puedes verificar que esté corriend
 
 ## 3. Insertar los insumos en la carpeta de data
 
-Dentro de la carpeta raíz se encuentra un directorio llamado `data/`. Debes asegurarte de que el archivo CSV de datos históricos esté guardado allí. El nombre del archivo debe coincidir exactamente con el valor declarado en la variable `CSV_FILE_PATH` de tu `.env`.
+Dentro de la carpeta raíz crear un directorio llamado `data/`. Debes asegurarte de que el archivo CSV de datos históricos esté guardado allí. El nombre del archivo debe coincidir exactamente con el valor declarado en la variable `CSV_FILE_PATH` de tu `.env`.
 
 ## 4. Ejecutar la migración de la base de datos
 
