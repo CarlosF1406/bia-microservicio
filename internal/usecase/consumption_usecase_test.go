@@ -294,11 +294,11 @@ func TestGeneratePeriods_Weekly(t *testing.T) {
 	if len(periods) != 2 {
 		t.Fatalf("esperado 2 semanas, obtenido %d", len(periods))
 	}
-	if periods[0] != "JUN 1 JUN 7" {
-		t.Errorf("semana 1: esperado %q, obtenido %q", "JUN 1 JUN 7", periods[0])
+	if periods[0] != "JUN 1 - JUN 7" {
+		t.Errorf("semana 1: esperado %q, obtenido %q", "JUN 1 - JUN 7", periods[0])
 	}
-	if periods[1] != "JUN 8 JUN 14" {
-		t.Errorf("semana 2: esperado %q, obtenido %q", "JUN 8 JUN 14", periods[1])
+	if periods[1] != "JUN 8 - JUN 14" {
+		t.Errorf("semana 2: esperado %q, obtenido %q", "JUN 8 - JUN 14", periods[1])
 	}
 }
 
