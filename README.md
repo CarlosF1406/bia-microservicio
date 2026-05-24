@@ -18,8 +18,14 @@ Antes de comenzar, asegúrate de tener instaladas las siguientes herramientas en
 
 El proyecto utiliza un archivo `.env` en la raíz para centralizar la configuración. Copia el archivo de ejemplo para crear tu entorno local:
 
+**Linux / Mac:**
 ```shell
 cp .env.example .env
+```
+
+**Windows (PowerShell):**
+```powershell
+Copy-Item .env.example .env
 ```
 
 A continuación se detalla el propósito de cada variable:
@@ -47,10 +53,18 @@ Sigue estos pasos en orden cronológico desde tu terminal para desplegar el micr
 
 ## 1. Clonar el repositorio y preparar el entorno
 
+**Linux / Mac:**
 ```shell
 git clone https://github.com/CarlosF1406/bia-microservicio
 cd bia-microservicio
 cp .env.example .env
+```
+
+**Windows (PowerShell):**
+```powershell
+git clone https://github.com/CarlosF1406/bia-microservicio
+cd bia-microservicio
+Copy-Item .env.example .env
 ```
 
 ## 2. Levantar la Infraestructura (Base de Datos)
@@ -59,46 +73,67 @@ cp .env.example .env
 docker compose up -d
 ```
 
-(Puedes verificar que esté arriba corriendo `docker ps`).
+Este comando es igual en todos los sistemas. Puedes verificar que esté corriendo con `docker ps`
 
 ## 3. Insertar los insumos en la carpeta de data
 
-Dentro de la carpeta raíz es necesario crear un directorio llamado `data/`. Debes asegurarte de que el archivo CSV de datos históricos esté guardado allí. El nombre del archivo debe coincidir exactamente con el valor declarado en la variable `CSV_FILE_PATH` de tu `.env`.
+Dentro de la carpeta raíz se encuentra un directorio llamado `data/`. Debes asegurarte de que el archivo CSV de datos históricos esté guardado allí. El nombre del archivo debe coincidir exactamente con el valor declarado en la variable `CSV_FILE_PATH` de tu `.env`.
 
-## 4. Inicializar, importar datos y encender la API (Todo en uno)
+## 4. Ejecutar la migración de la base de datos
 
+**Linux / Mac:**
 ```shell
-make setup
+docker exec -i bia_postgres_container psql -U postgres -d bia_db < migrations/init.sql
 ```
 
-(En caso de que ya se haya inicializado el setup y solo se quiera encender o apagar la API usar `make run`)
+**Windows (PowerShell):**
+```powershell
+Get-Content migrations/init.sql | docker exec -i bia_postgres_container psql -U postgres -d bia_db
+```
+
+## 5. Importar los datos del CSV
+
+```shell
+go run cmd/importer/main.go
+```
+
+Este comando es igual en todos los sistemas.
+
+## 6. Levantar el servidor
+
+```shell
+go run cmd/api/main.go
+```
+
+Este comando es igual en todos los sistemas. Una vez iniciado, la API estará disponible en:
+
+- **Endpoint:** `http://localhost:8080/consumption`
+- **Documentación Swagger:** `http://localhost:8080/swagger/index.html`
 
 # 🧪 Ejecución de Pruebas (Testing)
 
-El proyecto cuenta con una suite completa de pruebas automatizadas dividida en dos capas: **Pruebas Unitarias** (aisladas de la infraestructura) y **Pruebas de Integración** (contra la base de datos real). Ambas se pueden ejecutar de forma cómoda utilizando el `Makefile`.
+El proyecto cuenta con una suite completa de pruebas automatizadas dividida en dos capas: **Pruebas Unitarias** (aisladas de la infraestructura) y **Pruebas de Integración** (contra la base de datos real).
 
 ## 1. Pruebas Unitarias
 
-Estas pruebas validan la lógica de negocio pura de los casos de uso y el comportamiento de los controladores (handlers) utilizando dobles de prueba (*mocks*) en memoria para los repositorios y clientes HTTP. No requieren infraestructura externa activa.
-
-* **Comando para ejecutar todas las pruebas unitarias:**
+Estas pruebas validan la lógica de negocio pura de los casos de uso y el comportamiento de los controladores (handlers) utilizando dobles de prueba (*mocks*) en memoria. No requieren infraestructura externa activa.
 
 ```shell
-make test
+go test -v -cover ./...
 ```
 
-(**¿Qué hace por detrás?** Corre de forma nativa `go test ./...` omitiendo cualquier lógica que dependa de componentes pesados o conexiones de red.)
+Este comando es igual en todos los sistemas.
 
-## 2. Pruebas de integración
+## 2. Pruebas de Integración
 
-Estas pruebas comprueban la persistencia real de los datos, las consultas complejas y la interacción directa de los adaptadores HTTP con la base de datos PostgreSQL.
+Estas pruebas comprueban la persistencia real de los datos y la interacción directa con la base de datos PostgreSQL.
 
-⚠️ **Requisito Crítico:** El contenedor de Docker con la base de datos debe estar encendido antes de lanzar estos tests, de lo contrario la conexión fallará.
+⚠️ **Requisito Crítico:** El contenedor de Docker debe estar encendido y la migración ejecutada antes de correr estos tests.
 
-* **Comando para ejecutar las pruebas de integración:**
+Primero asegúrate de tener la base de datos lista (pasos 2, 4 y 5 de arriba), luego corre:
 
 ```shell
-make integration-setup
+go test -v -tags=integration ./...
 ```
 
-En este caso `make integration-setup` se utiliza para preparar todo el setup (migrar, importar y ejecutar el test) para realizar las pruebas, en caso de que el setup ya este listo, solamente ejecutar `make test-integration`.
+Este comando es igual en todos los sistemas.
