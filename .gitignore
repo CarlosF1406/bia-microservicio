@@ -1,0 +1,8 @@
+# Ignorar binarios de Go
+/bia-microservicio
+
+# Ignorar variables de entorno locales con credenciales reales
+.env
+
+# Ignorar archivos temporales del sistema
+.DS_Store
