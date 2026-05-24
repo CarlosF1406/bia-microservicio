@@ -1,0 +1,82 @@
+basePath: /
+definitions:
+  domain.ConsumptionResponse:
+    properties:
+      data_graph:
+        items:
+          $ref: '#/definitions/domain.MeterData'
+        type: array
+      period:
+        items:
+          type: string
+        type: array
+    type: object
+  domain.MeterData:
+    properties:
+      active:
+        items:
+          type: number
+        type: array
+      address:
+        type: string
+      exported:
+        items:
+          type: number
+        type: array
+      meter_id:
+        type: integer
+      reactive_capacitive:
+        items:
+          type: number
+        type: array
+      reactive_inductive:
+        items:
+          type: number
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API para consultar consumos de energía por medidor
+  title: BIA Microservicio de Consumos
+  version: "1.0"
+paths:
+  /consumption:
+    get:
+      description: Retorna el consumo acumulado por periodo para los medidores dados
+      parameters:
+      - description: IDs de medidores separados por coma
+        in: query
+        name: meters_ids
+        required: true
+        type: string
+      - description: Fecha inicio (YYYY-MM-DD)
+        in: query
+        name: start_date
+        required: true
+        type: string
+      - description: Fecha fin (YYYY-MM-DD)
+        in: query
+        name: end_date
+        required: true
+        type: string
+      - description: 'Tipo de periodo: daily, weekly, monthly'
+        in: query
+        name: kind_period
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.ConsumptionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtener consumos
+      tags:
+      - consumption
+swagger: "2.0"

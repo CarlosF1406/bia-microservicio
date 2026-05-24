@@ -1,0 +1,123 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API para consultar consumos de energía por medidor",
+        "title": "BIA Microservicio de Consumos",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/consumption": {
+            "get": {
+                "description": "Retorna el consumo acumulado por periodo para los medidores dados",
+                "tags": [
+                    "consumption"
+                ],
+                "summary": "Obtener consumos",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "IDs de medidores separados por coma",
+                        "name": "meters_ids",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Fecha inicio (YYYY-MM-DD)",
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Fecha fin (YYYY-MM-DD)",
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tipo de periodo: daily, weekly, monthly",
+                        "name": "kind_period",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ConsumptionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.ConsumptionResponse": {
+            "type": "object",
+            "properties": {
+                "data_graph": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.MeterData"
+                    }
+                },
+                "period": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "domain.MeterData": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "address": {
+                    "type": "string"
+                },
+                "exported": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "meter_id": {
+                    "type": "integer"
+                },
+                "reactive_capacitive": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "reactive_inductive": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            }
+        }
+    }
+}
